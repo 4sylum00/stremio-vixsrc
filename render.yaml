@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: vixsrc-addon
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: TMDB_API_KEY
+        sync: false  # imposta questo nella dashboard dopo il primo deploy
