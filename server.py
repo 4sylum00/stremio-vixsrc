@@ -48,7 +48,8 @@ def stream(type, id):
         if streams:
             print(f"[SERVER] Trovati {len(streams)} stream:")
             # Converti URL relative /m3u8/ in assolute
-            base = request.host_url.rstrip("/")
+            scheme = request.headers.get("X-Forwarded-Proto", request.scheme)
+            base = f"{scheme}://{request.host}"
             for s in streams:
                 url = s["url"]
                 if url.startswith("/m3u8/"):
@@ -103,9 +104,10 @@ def serve_m3u8(key):
 
 @app.route("/")
 def home():
+    scheme = request.headers.get("X-Forwarded-Proto", request.scheme)
     return f"""
     <h1>VixSrc Stremio Addon</h1>
-    <p>Installa in Stremio: <code>http://{request.host}/manifest.json</code></p>
+    <p>Installa in Stremio: <code>{scheme}://{request.host}/manifest.json</code></p>
     <p>Test film: <code>/test/movie/tt0137523</code></p>
     <p>Test serie: <code>/test/series/tt0944947/1/1</code></p>
     """
